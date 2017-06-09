@@ -78,7 +78,7 @@ twenty_dollars * 3
  => 60.00 USD 
 ```
 
-Comparison of DaMoney::Money objects. Supported methods are `==`, `>=`, `<=`, `<` and `>`:
+Comparison of DaMoney::Money objects:
 ``` ruby
 twenty_dollars == DaMoney::Money.new(20, 'USD')
  => true 
