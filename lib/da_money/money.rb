@@ -1,5 +1,8 @@
 module DaMoney
   class Money
+    include Comparable
+
+    attr :amount, :currency
 
     class << self
 
@@ -24,20 +27,6 @@ module DaMoney
       raise Exception.new("'amount' must be a Numeric!") unless amount.is_a? Numeric
       @amount = amount.to_f.round(2)
       @currency = currency.to_s
-    end
-
-    # Returns the numerical value of a DaMoney::Money object.
-    #
-    # @return [Float]
-    def amount
-      @amount
-    end
-
-    # Returns the the currency of a DaMoney::Money object.
-    #
-    # @return [String]
-    def currency
-      @currency
     end
 
     # Converts a DaMoney::Money object into a different currency.
@@ -81,13 +70,12 @@ module DaMoney
     # The DaMoney::Money object given will be converted to the base currency if necessary.
     #
     # @return [Boolean]
-    %w(== >= <= < >).each do |m|
-      define_method m do |money|
-        raise Exception.new("'money' must be a DaMoney::Money object!") \
-          unless money.is_a? DaMoney::Money
-        money = money.convert_to(self.currency) unless self.currency == money.currency
-        self.amount.send(m, money.amount)
-      end
+    
+    def <=>(money)
+      raise Exception.new("'money' must be a DaMoney::Money object!") \
+        unless money.is_a? DaMoney::Money
+      money = money.convert_to(self.currency) unless self.currency == money.currency
+      self.amount <=> money.amount
     end
 
     # Defines mathematical operations '*' and '/' for a DaMoney::Money object.
